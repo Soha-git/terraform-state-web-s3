@@ -1,0 +1,60 @@
+name: "Terraform CI/CD"
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'terraform/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'terraform/**'
+
+jobs:
+  terraform:
+    strategy:
+      max-parallel: 1
+      matrix:
+        tf_actions_working_dir: [terraform]
+    name: "Terraform"
+    runs-on: ubuntu-latest
+    defaults:
+      run:  
+        working-directory: ${{ matrix.tf_actions_working_dir }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configurations AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.2.9
+
+      - name: Terraform Format
+        id: fmt
+        run: terraform fmt -check    
+        continue-on-error: true
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+
+
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terraform apply -auto-approve
+
+
