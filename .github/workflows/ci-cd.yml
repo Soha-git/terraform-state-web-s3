@@ -2,22 +2,18 @@ name: "Terraform CI/CD"
 
 on:
   push:
-    branches:
-      - main
     paths:
-      - 'terraform/s3/**'
+      - 'terraform/**'
   pull_request:
-    branches:
-      - main
     paths:
-      - 'terraform/s3/**'
+      - 'terraform/**'
 
 jobs:
   terraform:
     strategy:
       max-parallel: 1
       matrix:
-        tf_actions_working_dir: [terraform/s3]
+        tf_actions_working_dir: [terraform/backend, terraform/s3]
     name: "Terraform"
     runs-on: ubuntu-latest
     defaults:
