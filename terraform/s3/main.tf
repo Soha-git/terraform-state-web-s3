@@ -1,4 +1,24 @@
 
+terraform {
+    backend "s3" {
+        bucket = "terraform-state-backet"
+        encrypt = true
+        key = "s3/terraform.tfstate"
+        region = "us-east-1"
+        dynamodb_table = "terraform_stake_lock"
+    }
+    required_providers {
+      aws = {
+        version = "~> 3.0"
+      }
+    }
+    required_version = ">=0.13"
+}
+
+provider "aws" {
+    region = "us-east-1"
+}
+
 resource "aws_s3_bucket" "static_web_site" {
   bucket = var.s3_bucket
   acl    = "public-read"

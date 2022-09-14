@@ -1,28 +1,26 @@
-name: "Terraform CI/CD"
+name: "Terraform CI/CD Backend"
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'terraform/s3/**'
+      - 'terraform/backend/**'
   pull_request:
     branches:
       - main
     paths:
-      - 'terraform/s3/**'
+      - 'terraform/backend/**'
 
 jobs:
   terraform:
-    strategy:
-      max-parallel: 1
-      matrix:
-        tf_actions_working_dir: [terraform/s3]
     name: "Terraform"
     runs-on: ubuntu-latest
+    env:
+      working-directory: terraform/backend
     defaults:
       run:  
-        working-directory: ${{ matrix.tf_actions_working_dir }}
+        working-directory: ${{ env.working-directory }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -90,7 +88,6 @@ jobs:
         if: steps.plan.outcome == 'failure'
         run: exit 1
 
-        
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve

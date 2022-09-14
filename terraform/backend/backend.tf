@@ -1,4 +1,11 @@
 terraform {
+  # backend "s3" {
+  #       bucket = "terraform-state-backet"
+  #       encrypt = true
+  #       key = "backend/terraform.tfstate"
+  #       region = "us-east-1"
+  #       dynamodb_table = "terraform_stake_lock"
+  #   }
     required_providers {
       aws = {
         version = "~> 3.0"
@@ -8,8 +15,6 @@ terraform {
 }
 
 provider "aws" {
-    # shared_credentials_file = "~/.aws/credentials"
-    # profile = "user"
     region = "us-east-1"
 }
 
