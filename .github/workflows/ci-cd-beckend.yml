@@ -20,7 +20,7 @@ jobs:
       working-directory: terraform/backend
     defaults:
       run:  
-        working-directory: ${{ matrix.tf_actions_working_dir }}
+        working-directory: ${{ env.working-directory }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
