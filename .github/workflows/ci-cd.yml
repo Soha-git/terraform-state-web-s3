@@ -4,20 +4,20 @@ on:
   push:
     branches:
       - main
-    # paths:
-    #   - 'terraform/**'
+    paths:
+      - 'terraform/s3/**'
   pull_request:
     branches:
       - main
     paths:
-      - 'terraform/**'
+      - 'terraform/s3/**'
 
 jobs:
   terraform:
     strategy:
       max-parallel: 1
       matrix:
-        tf_actions_working_dir: [terraform]
+        tf_actions_working_dir: [terraform/s3]
     name: "Terraform"
     runs-on: ubuntu-latest
     defaults:
